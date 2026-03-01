@@ -105,6 +105,32 @@ export const actions: ActionTree<GuiMaintenanceState, RootState> = {
         const initKey = Object.keys(entries).find((key) => entries[key]?.name === 'MAINTENANCE_INIT')
         if (initKey) delete entries[initKey]
 
+        // normalize entries to prevent fatal errors when reading from older/corrupted database
+        Object.keys(entries).forEach((key) => {
+            const entry = entries[key]
+            if (entry) {
+                if (!entry.reminder || !('type' in entry.reminder)) {
+                    window.console.warn(`Maintenance entry "${entry.name || key}" has missing or corrupted reminder properties. Normalizing.`, entry)
+                }
+
+                entry.reminder = {
+                    type: entry.reminder?.type ?? null,
+                    filament: {
+                        bool: entry.reminder?.filament?.bool ?? false,
+                        value: entry.reminder?.filament?.value ?? null,
+                    },
+                    printtime: {
+                        bool: entry.reminder?.printtime?.bool ?? false,
+                        value: entry.reminder?.printtime?.value ?? null,
+                    },
+                    date: {
+                        bool: entry.reminder?.date?.bool ?? false,
+                        value: entry.reminder?.date?.value ?? null,
+                    },
+                }
+            }
+        })
+
         await commit('initStore', entries)
         await dispatch('socket/removeInitModule', 'gui/maintenance/init', { root: true })
     },

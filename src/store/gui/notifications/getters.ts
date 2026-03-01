@@ -454,6 +454,8 @@ export const getters: GetterTree<GuiNotificationState, any> = {
         const systemBootAt = rootState.server.system_boot_at ?? new Date()
         let dismisses = [...state.dismiss]
         dismisses = dismisses.filter((dismiss) => {
+            if (!dismiss) return false
+
             if (dismiss.type === 'reboot') {
                 return systemBootAt.getTime() < dismiss.date
             }
@@ -470,7 +472,7 @@ export const getters: GetterTree<GuiNotificationState, any> = {
 
     getDismissByCategory: (state, getters) => (category: string) => {
         let dismisses = getters.getDismiss
-        dismisses = dismisses.filter((dismiss: GuiNotificationStateDismissEntry) => dismiss.category === category)
+        dismisses = dismisses.filter((dismiss: GuiNotificationStateDismissEntry) => dismiss?.category === category)
 
         return dismisses
     },

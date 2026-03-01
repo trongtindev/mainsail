@@ -19,9 +19,9 @@ export const mutations: MutationTree<GuiNotificationState> = {
         const dismiss = [...state.dismiss]
         const index = dismiss.findIndex(
             (dismiss) =>
-                dismiss.id === payload.id && dismiss.category === payload.category && dismiss.type === payload.type
+                dismiss?.id === payload.id && dismiss?.category === payload.category && dismiss?.type === payload.type
         )
-        if (index !== -1) dismiss.splice(index)
+        if (index !== -1) dismiss.splice(index, 1)
 
         Vue.set(state, 'dismiss', dismiss)
     },
