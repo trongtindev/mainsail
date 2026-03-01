@@ -55,7 +55,7 @@
                             (device.locked_while_printing && ['printing', 'paused'].includes(printer_state))
                         "
                         @click="changeSwitch(device, device.status)">
-                        <v-list-item-title>{{ device.device }}</v-list-item-title>
+                        <v-list-item-title>{{ convertName(device.device) }}</v-list-item-title>
                         <v-list-item-action class="my-0 d-flex flex-row" style="min-width: auto">
                             <v-icon class="mr-2" :color="device.status === 'on' ? '' : 'grey darken-2'">
                                 {{ device.status === 'on' ? mdiToggleSwitch : mdiToggleSwitchOff }}
@@ -105,6 +105,7 @@ import { mdiCloseThick, mdiPowerStandby, mdiRestart, mdiPower, mdiToggleSwitch, 
 import TopCornerMenuService from '@/components/ui/TopCornerMenuService.vue'
 import ConfirmationDialog from '@/components/dialogs/ConfirmationDialog.vue'
 import ServiceMixins from '@/components/mixins/services'
+import { convertName } from '@/plugins/helpers'
 
 interface dialogPowerDeviceChange {
     show: boolean
@@ -131,6 +132,7 @@ export default class TheTopCornerMenu extends Mixins(BaseMixin, ServiceMixins) {
     mdiPower = mdiPower
     mdiToggleSwitch = mdiToggleSwitch
     mdiToggleSwitchOff = mdiToggleSwitchOff
+    convertName = convertName
 
     showMenu = false
     dialogPowerDeviceChange: dialogPowerDeviceChange = {
@@ -182,10 +184,10 @@ export default class TheTopCornerMenu extends Mixins(BaseMixin, ServiceMixins) {
     get powerDeviceDialogTitle(): string {
         return this.dialogPowerDeviceChange.value === 'off'
             ? this.$t('PowerDeviceChangeDialog.TurnDeviceOn', {
-                  device: this.dialogPowerDeviceChange.device,
+                  device: convertName(this.dialogPowerDeviceChange.device),
               }).toString()
             : this.$t('PowerDeviceChangeDialog.TurnDeviceOff', {
-                  device: this.dialogPowerDeviceChange.device,
+                  device: convertName(this.dialogPowerDeviceChange.device),
               }).toString()
     }
 

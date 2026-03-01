@@ -344,6 +344,7 @@ import { Debounce } from 'vue-debounce-decorator'
 import { mdiRestart, mdiTimerOutline } from '@mdi/js'
 import { ServerPowerStateDevice } from '@/store/server/power/types'
 import ThemeMixin from '@/components/mixins/theme'
+import { convertName } from '@/plugins/helpers'
 
 @Component({
     components: { SettingsRow },
@@ -585,12 +586,12 @@ export default class SettingsUiSettingsTab extends Mixins(BaseMixin, ThemeMixin)
 
     get powerDeviceOptions() {
         const items: { text: string; value: string | null }[] = [
-            { text: `Auto (${this.autoPowerDevice})`, value: null },
+            { text: `Auto (${this.autoPowerDevice === '--' ? '--' : convertName(this.autoPowerDevice)})`, value: null },
         ]
 
         this.powerDevices.forEach((device: ServerPowerStateDevice) => {
             items.push({
-                text: `${device.device} (${device.type})`,
+                text: `${convertName(device.device)} (${device.type})`,
                 value: device.device.toString(),
             })
         })

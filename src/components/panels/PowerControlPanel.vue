@@ -16,7 +16,7 @@
                 <v-divider v-if="index > 0" class="mt-0"></v-divider>
                 <v-card-text class="py-2">
                     <v-row>
-                        <v-col class="py-0 pt-1">{{ device.device }}</v-col>
+                        <v-col class="py-0 pt-1">{{ convertName(device.device) }}</v-col>
                         <v-col class="py-0 text-right">
                             <v-btn-toggle v-model="device.status">
                                 <v-btn v-if="device.status === 'error'" small disabled>
@@ -49,6 +49,7 @@
 import { mapState } from 'vuex'
 import Vue from 'vue'
 import { mdiPower } from '@mdi/js'
+import { convertName } from '@/plugins/helpers'
 
 export default {
     components: {},
@@ -65,6 +66,7 @@ export default {
         }),
     },
     methods: {
+        convertName,
         setPower(device, value) {
             let rpc = value === 1 ? 'machine.device_power.on' : 'machine.device_power.off'
             Vue.$socket.emit(rpc, { [device.device]: null }, 'server/power/responseToggle')
